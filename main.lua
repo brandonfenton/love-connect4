@@ -1,5 +1,4 @@
 local moonshine = require 'moonshine'
-function enum(x) for k,v in pairs(x) do print(k,v) end end	
 
 function love.load()
 	--love.window.setFullscreen(true) --not for now
@@ -81,14 +80,6 @@ function love.update(dt)
 	shd1:send("time",t)
 	shd2:send("time",t)
 
-	
-
-	--toggle fullscreen
-	--if love.keyboard.isDown("f") then
-	--	newFs = not love.window.getFullscreen()
-	--	love.window.setFullscreen(newFs)
-	--	print(love.window.getMode())
-	--end
 
 	if love.keyboard.isDown("escape") then
 		love.event.quit()
@@ -133,7 +124,7 @@ function love.mousepressed(x,y, button, istouch)
 
 	for i, block in pairs(blocks) do
 		bCoords = {block.b:getWorldPoints(block.s:getPoints())}
-		if button == 1 and block.static == false and
+		if button == 1 and 
 		x >= bCoords[1] and x <=bCoords[3] and
 		y >= bCoords[2] and y <=bCoords[6] then
 			block.drag = true
@@ -188,7 +179,7 @@ function love.keypressed(key, scancode, isrepeat)
 		love.event.quit()
 	end
 end
-text = ""
+
 function beginContact(a, b, coll)
 	local uData = {}
 	uData.a = a:getUserData()
@@ -218,6 +209,7 @@ function postSolve(a, b, coll, normalimpulse, tangentimpulse)
 	 
 end
 
+--This was a code snippet I found that draws a dotted line.  Have not used it yet
 function drawLine(x1, y1, x2, y2)
 	love.graphics.setPointSize(5)
 	
@@ -236,8 +228,9 @@ end
 
 
 function drawGrid()
+	--draw the board
 	love.graphics.setColor(0,0,1)
-	line = love.graphics.line
+	local line = love.graphics.line
 	
 	for vline = xmin, xmax, blkSize do
 		line(vline, ymin, vline, ymax)
@@ -258,9 +251,10 @@ function createBlock(x,y)
 		block.f = love.physics.newFixture(block.b, block.s)
 		block.f:setRestitution(0)
 		block.f:setUserData("Block")
-		block.drag = false --is dragging active?
+		block.drag = false --for mouse dragging
 		block.p1 = p1
 	table.insert(blocks, block)
+
 	if p1 == true then
 		one:play()
 	else 
