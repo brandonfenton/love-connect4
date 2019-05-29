@@ -9,7 +9,7 @@ function love.load()
 	        extern number time;
 		vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 		        {
-		            return vec4(1, 0, 1-(1.0+sin(time))/2.0, 1);
+		   	    return vec4((1.0+sin(time))/2.0, abs(cos(time)), abs(sin(time)), 0.5);
 		        }
 		]]
 
@@ -17,21 +17,21 @@ function love.load()
 	        extern number time;
 		vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 		        {
-		            return vec4(1-(1.0+sin(time))/2.0, 0, 1.0, 1.0);
+			    return vec4(1-(1.0+sin(time))/2.0, 1-abs(cos(time)), 1-abs(sin(time)), 1.0);
 		        }
 		]]
 	
 	
 	--Set up moonshine effects
-	ms1 = moonshine(moonshine.effects.glow) 
+	--ms1 = moonshine(moonshine.effects.glow) 
+	--ms1.glow.min_luma = 0
+	--ms1.glow.strength = 15
+	
+	ms1 = moonshine(moonshine.effects.glow).chain(moonshine.effects.chromasep)
 	ms1.glow.min_luma = 0
 	ms1.glow.strength = 15
-	
-	ms2 = moonshine(moonshine.effects.glow).chain(moonshine.effects.chromasep)
-	ms2.glow.min_luma = 0
-	ms2.glow.strength = 15
-	ms2.chromasep.angle = math.pi/4
-	ms2.chromasep.radius=3
+	ms1.chromasep.angle = math.pi/4
+	ms1.chromasep.radius=3
 	
 	--Set up audio
 	one = love.audio.newSource("audio/one.wav","stream")
@@ -111,17 +111,18 @@ function love.draw()
 		love.graphics.polygon("fill", static.b:getWorldPoints(static.s:getPoints()))
 		--love.graphics.setShader()
 		for i, block in pairs(blocks) do
-			if block.p1 == true then love.graphics.setColor(1,0,0)
-			elseif block.p1 == false then love.graphics.setColor(0,0,1)
+			if block.p1 == true then love.graphics.setShader(shd1)
+			elseif block.p1 == false then love.graphics.setShader(shd2)
 			end
 			
 			love.graphics.polygon("fill", block.b:getWorldPoints(block.s:getPoints()))
 		end
-		
+
+		love.graphics.setShader()
+
 		drawGrid()
 		
 		love.graphics.setColor(1,0,1)
-
 		love.graphics.print("P1",50,50)
 		love.graphics.print("P2",700,50)
 
