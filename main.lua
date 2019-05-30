@@ -162,19 +162,20 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 	if key == "1" then
-		createBlock(175, 100)
+		print(column(1))
+		createBlock(column(1))
 	elseif key == "2" then
-		createBlock(250, 100)
+		createBlock(column(2))
 	elseif key =="3" then
-		createBlock(325, 100)
+		createBlock(column(3))
 	elseif key =="4" then
-		createBlock(400, 100)
+		createBlock(column(4))
 	elseif key =="5" then
-		createBlock(475, 100)
-	elseif key == "6" then
-		createBlock(550, 100)
+		createBlock(column(5))
+	elseif key =="6" then
+		createBlock(column(6))
 	elseif key == "7" then
-		createBlock(625, 100)
+		createBlock(column(7))
 	elseif key == "escape" then
 		love.event.quit()
 	end
@@ -262,4 +263,11 @@ function createBlock(x,y)
 	end
 
 	p1 = not p1
+end
+
+function column(col)
+	local x,y
+	y = 100
+	x = (col - 1)*75 + 175
+	return x,y
 end
